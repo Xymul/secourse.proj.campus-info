@@ -1,0 +1,55 @@
+# 「此刻校园」本地一键启动（数据库 + 后端 + 前端）
+#
+#   docker compose up -d postgres     # 仅启动数据库
+#   docker compose --profile app up -d # 数据库 + 后端（需先本地构建 jar）
+#
+# 默认账号：admin / admin123、student1 / 123456
+# 说明：Compose 规范已移除顶层 version 字段（新版 docker compose 会提示该字段已过时），
+#       故此处不再声明，docker compose v2（Debian 13 默认）可直接使用。
+
+services:
+  postgres:
+    image: postgis/postgis:16-3.4
+    container_name: campus-postgres
+    environment:
+      POSTGRES_DB: campus_info
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      TZ: Asia/Shanghai
+    ports:
+      - "5432:5432"
+    volumes:
+      - campus-pgdata:/var/lib/postgresql/data
+      # 表结构由 Flyway 管理；如需在容器初始化时直接灌入模拟数据，可挂载下面的脚本
+      # - ./db/optional_mock_posts.sql:/docker-entrypoint-initdb.d/10-mock.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d campus_info"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  # 可选：后端容器（先执行 cd backend && mvnw -B -DskipTests package 生成 jar）
+  backend:
+    image: eclipse-temurin:17-jre
+    container_name: campus-backend
+    profiles: ["app"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/campus_info
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      CAMPUS_SEED_ENABLED: "true"
+      TZ: Asia/Shanghai
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./backend/target:/app
+    working_dir: /app
+    command: ["sh", "-c", "java -jar campus-info-platform-backend-1.0.0.jar"]
+    restart: unless-stopped
+
+volumes:
+  campus-pgdata:

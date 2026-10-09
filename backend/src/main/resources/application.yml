@@ -1,0 +1,95 @@
+server:
+  port: 8080
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+
+spring:
+  application:
+    name: campus-info-platform
+  profiles:
+    default: postgres
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      write-dates-as-timestamps: false
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: Asia/Shanghai
+          batch_size: 40
+        order_inserts: true
+        order_updates: true
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+campus:
+  seed:
+    # 是否自动初始化演示数据（学校/分类/地点/账号/1500+ 条模拟信息）
+    enabled: ${CAMPUS_SEED_ENABLED:true}
+    mock-post-count: ${CAMPUS_MOCK_POSTS:1560}
+    random-seed: 20260918
+  auth:
+    token-ttl-hours: 168
+    allow-register: true
+  search:
+    default-radius-km: 3.0
+    freshness-half-life-days: 7
+    map-max-nodes: 600
+    same-location-cluster-size: 3
+  governance:
+    false-verify-warn-threshold: 3
+    report-auto-audit-threshold: 2
+    # true：普通用户发布后需管理员审核；false：先发布，举报/证伪触发后转入待审核
+    pre-audit: false
+    expire-cron: "0 10 3 * * *"
+
+logging:
+  level:
+    org.secourse.hzau.campus: INFO
+    org.hibernate.SQL: WARN
+
+---
+# 主运行环境：PostgreSQL（Flyway 管理表结构，Hibernate 仅做校验）
+spring:
+  config:
+    activate:
+      on-profile: postgres
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/campus_info}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 4
+      connection-timeout: 10000
+      pool-name: campus-pool
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+---
+# 零依赖体验环境：H2（内存库，结构与实体自动生成，便于本地快速试跑）
+spring:
+  config:
+    activate:
+      on-profile: h2
+  datasource:
+    url: jdbc:h2:mem:campus;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1
+    username: sa
+    password: ""
+    driver-class-name: org.h2.Driver
+  flyway:
+    enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: create-drop

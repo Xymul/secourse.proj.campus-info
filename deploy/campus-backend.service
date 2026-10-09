@@ -1,0 +1,39 @@
+# ============================================================
+#  此刻校园 · 后端 systemd 服务单元（Debian 13）
+#
+#  安装：
+#    sudo cp deploy/campus-backend.service /etc/systemd/system/
+#    sudo mkdir -p /etc/campus
+#    sudo cp deploy/campus.env.example /etc/campus/campus.env
+#    sudo editor /etc/campus/campus.env          # 按需修改数据库连接等
+#    sudo systemctl daemon-reload
+#    sudo systemctl enable --now campus-backend
+#    systemctl status campus-backend --no-pager
+#
+#  前提：后端 jar 已构建并放到 /opt/campus/
+#    backend/mvnw -B -DskipTests package
+#    sudo cp backend/target/campus-info-platform-backend-1.0.0.jar /opt/campus/
+# ============================================================
+[Unit]
+Description=Campus Info Platform Backend (Spring Boot)
+Documentation=file:/opt/campus/README.md
+After=network-online.target postgresql.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=campus
+Group=campus
+WorkingDirectory=/opt/campus
+EnvironmentFile=/etc/campus/campus.env
+ExecStart=/usr/bin/java -Xms256m -Xmx512m -Dfile.encoding=UTF-8 -jar /opt/campus/campus-info-platform-backend-1.0.0.jar
+SuccessExitStatus=143
+Restart=on-failure
+RestartSec=5
+# 基础安全加固
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+
+[Install]
+WantedBy=multi-user.target
