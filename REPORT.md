@@ -71,6 +71,11 @@
 | `scripts/stop-local-db.sh` | 停止该实例 | `scripts/stop-local-db.cmd` |
 | `scripts/check-env.sh` | 环境自检：检查 JDK / Node / npm / PostgreSQL / curl / python3 是否就绪 | 新增 |
 | `scripts/build.sh` | 一键构建后端 jar 与前端 `dist/`（`all`/`backend`/`frontend`） | 新增 |
+| `scripts/start-all.sh` | 一键启动后端 + 前端 + Nginx（`FRONTEND_MODE=auto\|dev\|prod`、`BUILD=1`、`NO_NGINX=1`），日志与 PID 落在 `_build/run/` | 新增 |
+| `scripts/start-nginx.sh` | 启动 Nginx；`ENABLE_SITE=1` 顺带启用 `deploy/nginx-campus.conf` 站点并移除 default，启动前执行 `nginx -t` 校验，`RELOAD_ONLY=1` 仅热加载 | 新增 |
+| `scripts/stop-backend.sh` | 停止后端（PID 文件 → 端口 → 进程特征三层识别，SIGTERM 后超时 SIGKILL，最后校验端口释放） | 新增 |
+| `scripts/stop-frontend.sh` | 停止前端 Vite dev server（同上三层识别） | 新增 |
+| `scripts/stop-nginx.sh` | 停止 Nginx（systemd 优先，非 systemd 回退 `nginx -s stop`），并清理 80 端口残留进程 | 新增 |
 | `scripts/smoke-test.py` | 跨平台接口冒烟测试（仅用 Python 3 标准库，无 PowerShell 依赖） | `scripts/smoke-test.ps1` |
 | `scripts/smoke-test.sh` | 上述 Python 冒烟测试的薄封装 | — |
 | `deploy/campus-backend.service` | 后端 systemd 服务单元 | 新增 |
@@ -237,6 +242,9 @@ sudo nginx -t && sudo systemctl reload nginx
    若服务器时区不同，可用环境变量 `TZ` 与 JDBC 参数统一。
 5. **HTTPS**：生产建议用 `certbot --nginx` 申请证书，或将 `deploy/nginx-campus.conf` 扩展为 443 + HSTS。
 6. **AI 能力**：仍为项目内的规则/统计实现，与操作系统无关，无需额外部署。
+7. **systemd 托管时的停止方式**：若后端由 `campus-backend.service` 托管（`Restart=on-failure`、`RestartSec=5`），
+   手动 `kill` 或使用 `scripts/stop-backend.sh` 都可能被 systemd 自动拉起（尤其 `kill -9` 退出码 137 会被判定为失败）；
+   此时应使用 `sudo systemctl stop campus-backend`，如需避免开机自启再执行 `sudo systemctl disable campus-backend`。
 
 ---
 
@@ -249,6 +257,11 @@ sudo nginx -t && sudo systemctl reload nginx
   .gitignore                      # 忽略构建/运行产物
   scripts/start-backend.sh        # Linux 启动后端
   scripts/start-frontend.sh       # Linux 启动前端
+  scripts/start-nginx.sh          # 启动 Nginx（可启用站点）
+  scripts/start-all.sh            # 一键启动后端 + 前端 + Nginx
+  scripts/stop-backend.sh         # 停止后端
+  scripts/stop-frontend.sh        # 停止前端
+  scripts/stop-nginx.sh           # 停止 Nginx
   scripts/init-local-db.sh        # Linux 初始化本地库
   scripts/stop-local-db.sh        # Linux 停止本地库
   scripts/check-env.sh            # Linux 环境自检

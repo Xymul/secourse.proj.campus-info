@@ -253,15 +253,24 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts\smoke-test.ps1
 | `start-frontend.cmd` | 安装依赖（首次）并启动前端开发服务器 |
 | `smoke-test.ps1` | 全链路接口冒烟测试（UTF-8 with BOM，兼容 Windows PowerShell 5.1） |
 
-**Linux / Debian 13 脚本（与上表一一对应）：**
+**Linux / Debian 13 脚本（与上表一一对应，另含服务编排脚本）：**
 
 | 脚本 | 作用 |
 | --- | --- |
 | `init-local-db.sh` / `stop-local-db.sh` | 初始化 / 停止仓库自带的 PostgreSQL 实例（自动定位 PostgreSQL 工具，拒绝 root 运行） |
 | `start-backend.sh` / `start-frontend.sh` | 启动后端 / 前端（前端默认监听 `0.0.0.0:5173`） |
+| `start-nginx.sh` | 启动 Nginx；`ENABLE_SITE=1` 顺带启用 `deploy/nginx-campus.conf`，`RELOAD_ONLY=1` 仅热加载 |
+| `start-all.sh` | 一键启动后端 + 前端 + Nginx；`FRONTEND_MODE=auto\|dev\|prod`，`BUILD=1` 先构建，`NO_NGINX=1` 不起 Nginx |
+| `stop-backend.sh` | 停止后端（PID 文件 → 端口 → 进程特征三层识别，先 SIGTERM 后 SIGKILL） |
+| `stop-frontend.sh` | 停止前端 Vite dev server |
+| `stop-nginx.sh` | 停止 Nginx 并回收 80 端口 |
 | `build.sh` | 一键构建后端 jar 与前端 `dist/` |
 | `check-env.sh` | 运行环境自检（JDK / Node / npm / PostgreSQL / curl / python3） |
 | `smoke-test.sh` / `smoke-test.py` | 跨平台接口冒烟测试（Python 3 标准库，无需 PowerShell） |
+
+> 编排脚本产生的日志与 PID 位于 `_build/run/`（`backend.log`、`frontend.log`、`backend.pid`、`frontend.pid`）。
+> 后端若由 systemd（`campus-backend.service`）托管，停止请使用 `sudo systemctl stop campus-backend`，
+> 不要使用 `stop-backend.sh`（systemd 会按 `Restart=on-failure` 自动拉起）。
 
 ---
 

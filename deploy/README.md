@@ -10,6 +10,18 @@
 
 完整的分步部署流程、依赖安装与排错见仓库根目录的 [`../REPORT.md`](../REPORT.md) 与 [`../BUILD.md`](../BUILD.md)。
 
+## 相关启动/停止脚本（`scripts/`）
+
+| 脚本 | 作用 |
+| --- | --- |
+| `start-nginx.sh` | 启动 Nginx；`ENABLE_SITE=1` 可顺带把本目录的 `nginx-campus.conf` 装成站点 |
+| `start-all.sh` | 一键启动后端 + 前端 + Nginx（`FRONTEND_MODE=auto\|dev\|prod`） |
+| `stop-backend.sh` / `stop-frontend.sh` / `stop-nginx.sh` | 分别停止后端 / 前端 / Nginx |
+
+> 若后端由 systemd 托管，请用 `sudo systemctl stop campus-backend` 停止，不要用 `stop-backend.sh`，
+> 否则 systemd 会按 `Restart=on-failure` 自动拉起进程。
+
+
 ## 速览
 
 ```bash

@@ -116,13 +116,20 @@ scripts\start-frontend.cmd      :: 等价于 cd frontend && npm install && npm r
 | Linux 脚本 | 作用 | 对应 Windows 版 |
 | --- | --- | --- |
 | `scripts/build.sh [all\|backend\|frontend]` | 一键构建后端可执行 jar 与前端 `dist/` | — |
+| `scripts/start-all.sh` | 一键启动后端 + 前端 + Nginx（`FRONTEND_MODE=auto\|dev\|prod`、`BUILD=1`、`NO_NGINX=1`） | — |
 | `scripts/start-backend.sh` / `scripts/start-frontend.sh` | 启动后端 / 前端 | `start-backend.cmd` / `start-frontend.cmd` |
+| `scripts/start-nginx.sh` | 启动 Nginx（`ENABLE_SITE=1` 可一并启用 `deploy/nginx-campus.conf` 站点，`RELOAD_ONLY=1` 仅热加载） | — |
+| `scripts/stop-backend.sh` / `scripts/stop-frontend.sh` | 停止后端（默认端口 8080）/ 前端（默认端口 5173） | — |
+| `scripts/stop-nginx.sh` | 停止 Nginx 并回收 80 端口（`CHECK_PORT=0` 跳过端口兜底） | — |
 | `scripts/init-local-db.sh` / `scripts/stop-local-db.sh` | 初始化 / 停止仓库自带的 PostgreSQL 实例（端口 5433） | `init-local-db.cmd` / `stop-local-db.cmd` |
 | `scripts/check-env.sh` | 环境自检（JDK / Node / npm / PostgreSQL / curl / python3） | — |
 | `scripts/smoke-test.sh` | 接口冒烟测试（等价于 `smoke-test.ps1`，实现见 `smoke-test.py`） | `smoke-test.ps1` |
 
 首次使用请先 `chmod +x backend/mvnw scripts/*.sh`；systemd 常驻与 Nginx 反向代理模板见 `deploy/`。
 完整的适配分析、依赖安装与部署步骤见 [`REPORT.md`](REPORT.md)。
+
+> 注意：后端若由 systemd（`campus-backend.service`）托管，请使用 `sudo systemctl stop campus-backend` 停止，
+> 不要使用 `stop-backend.sh`——否则 systemd 会按 `Restart=on-failure` 自动拉起进程。
 
 ---
 
