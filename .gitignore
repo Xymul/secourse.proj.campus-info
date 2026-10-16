@@ -3,6 +3,9 @@ backend/target/
 frontend/dist/
 frontend/node_modules/
 
+# agent temperory workdirectory
+.agent/
+
 # 本地数据库实例数据目录与日志（scripts/init-local-db.sh 生成）
 _pg/
 
