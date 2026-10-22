@@ -12,17 +12,19 @@
 
 ---
 
+> 由于近期的安全漏洞，服务器暂停维护
+
 ## 1. 快速开始
 
 ### 1.1 环境要求
 
-| 组件 | 版本建议 | 说明 |
-| --- | --- | --- |
-| JDK | 17+（本机验证于 JDK 23） | 后端编译目标为 Java 17 |
-| Maven | 3.9+（已随附 `backend/mvnw` 包装器） | 无需单独安装 |
-| Node.js | 18+（本机验证于 Node 20） | 前端构建 |
-| PostgreSQL | 14+（本机验证于 18） | 主数据库；PostGIS 可选 |
-| Docker（可选） | 任意 | 用于一键启动数据库 |
+| 组件           | 版本建议                             | 说明                   |
+| -------------- | ------------------------------------ | ---------------------- |
+| JDK            | 17+（本机验证于 JDK 23）             | 后端编译目标为 Java 17 |
+| Maven          | 3.9+（已随附 `backend/mvnw` 包装器） | 无需单独安装           |
+| Node.js        | 18+（本机验证于 Node 20）            | 前端构建               |
+| PostgreSQL     | 14+（本机验证于 18）                 | 主数据库；PostGIS 可选 |
+| Docker（可选） | 任意                                 | 用于一键启动数据库     |
 
 ### 1.2 准备数据库（三选一）
 
@@ -53,6 +55,7 @@ scripts\start-backend.cmd
 ```
 
 启动后：
+
 - Flyway 自动执行 `V1__init_schema.sql`（表结构）与 `V2__school_real_campus.sql`（正式/测试校区）迁移，
   Hibernate 仅做 `validate` 校验，保证实体与表结构一致；
 - `DataSeeder` 幂等初始化：**5 个校区**（华中农业大学 2 个正式校区 + 江南/复旦/浙大 3 个测试数据校区）、
@@ -81,23 +84,23 @@ scripts\start-frontend.cmd      :: 等价于 cd frontend && npm install && npm r
 
 ### 1.5 演示账号
 
-| 账号 | 密码 | 角色 | 说明 |
-| --- | --- | --- | --- |
-| `admin` | `admin123` | 管理员 | 可进入「管理后台」 |
-| `hzau1` ~ `hzau12` | `123456` | 普通用户 | **华中农业大学**（正式校区）：hzau1~6 狮子山主校区、hzau7~12 襄阳校区 |
-| `student1` ~ `student18` | `123456` | 普通用户 | 测试数据校区：student1~6 江南大学、student7~12 复旦大学、student13~18 浙江大学 |
+| 账号                     | 密码       | 角色     | 说明                                                                           |
+| ------------------------ | ---------- | -------- | ------------------------------------------------------------------------------ |
+| `admin`                  | `admin123` | 管理员   | 可进入「管理后台」                                                             |
+| `hzau1` ~ `hzau12`       | `123456`   | 普通用户 | **华中农业大学**（正式校区）：hzau1~6 狮子山主校区、hzau7~12 襄阳校区          |
+| `student1` ~ `student18` | `123456`   | 普通用户 | 测试数据校区：student1~6 江南大学、student7~12 复旦大学、student13~18 浙江大学 |
 
 ### 1.6 校区（多租户）
 
 右上角「校区」下拉框按 `sort_order` 排序并分组展示：**正式校区** 在上，**测试数据** 在下。
 
-| 排序 | 校区 | code | 坐标（WGS-84） | 是否测试数据 | 说明 |
-| --- | --- | --- | --- | --- | --- |
-| 1 | 华中农业大学（狮子山主校区） | `hzau-main` | 30.473990, 114.348398 | 否 | 正式校区，坐标为 OSM/Photon 地理编码结果（武汉市洪山区狮子山街） |
-| 2 | 华中农业大学（襄阳校区） | `hzau-xiangyang` | 31.999918, 112.276105 | 否 | 正式校区（襄阳市襄州区蔡州路） |
-| 10 | 江南大学（蠡湖校区） | `jiangnan` | 31.485600, 120.265300 | **是** | 演示/测试数据校区 |
-| 11 | 复旦大学（邯郸校区） | `fudan` | 31.298900, 121.499800 | **是** | 演示/测试数据校区 |
-| 12 | 浙江大学（紫金港校区） | `zju` | 30.308400, 120.086300 | **是** | 演示/测试数据校区 |
+| 排序 | 校区                         | code             | 坐标（WGS-84）        | 是否测试数据 | 说明                                                             |
+| ---- | ---------------------------- | ---------------- | --------------------- | ------------ | ---------------------------------------------------------------- |
+| 1    | 华中农业大学（狮子山主校区） | `hzau-main`      | 30.473990, 114.348398 | 否           | 正式校区，坐标为 OSM/Photon 地理编码结果（武汉市洪山区狮子山街） |
+| 2    | 华中农业大学（襄阳校区）     | `hzau-xiangyang` | 31.999918, 112.276105 | 否           | 正式校区（襄阳市襄州区蔡州路）                                   |
+| 10   | 江南大学（蠡湖校区）         | `jiangnan`       | 31.485600, 120.265300 | **是**       | 演示/测试数据校区                                                |
+| 11   | 复旦大学（邯郸校区）         | `fudan`          | 31.298900, 121.499800 | **是**       | 演示/测试数据校区                                                |
+| 12   | 浙江大学（紫金港校区）       | `zju`            | 30.308400, 120.086300 | **是**       | 演示/测试数据校区                                                |
 
 规则说明：
 
@@ -113,17 +116,17 @@ scripts\start-frontend.cmd      :: 等价于 cd frontend && npm install && npm r
 
 仓库同时提供与 Windows 脚本一一对应的 Linux（Debian 13）脚本：
 
-| Linux 脚本 | 作用 | 对应 Windows 版 |
-| --- | --- | --- |
-| `scripts/build.sh [all\|backend\|frontend]` | 一键构建后端可执行 jar 与前端 `dist/` | — |
-| `scripts/start-all.sh` | 一键启动后端 + 前端 + Nginx（`FRONTEND_MODE=auto\|dev\|prod`、`BUILD=1`、`NO_NGINX=1`） | — |
-| `scripts/start-backend.sh` / `scripts/start-frontend.sh` | 启动后端 / 前端 | `start-backend.cmd` / `start-frontend.cmd` |
-| `scripts/start-nginx.sh` | 启动 Nginx（`ENABLE_SITE=1` 可一并启用 `deploy/nginx-campus.conf` 站点，`RELOAD_ONLY=1` 仅热加载） | — |
-| `scripts/stop-backend.sh` / `scripts/stop-frontend.sh` | 停止后端（默认端口 8080）/ 前端（默认端口 5173） | — |
-| `scripts/stop-nginx.sh` | 停止 Nginx 并回收 80 端口（`CHECK_PORT=0` 跳过端口兜底） | — |
-| `scripts/init-local-db.sh` / `scripts/stop-local-db.sh` | 初始化 / 停止仓库自带的 PostgreSQL 实例（端口 5433） | `init-local-db.cmd` / `stop-local-db.cmd` |
-| `scripts/check-env.sh` | 环境自检（JDK / Node / npm / PostgreSQL / curl / python3） | — |
-| `scripts/smoke-test.sh` | 接口冒烟测试（等价于 `smoke-test.ps1`，实现见 `smoke-test.py`） | `smoke-test.ps1` |
+| Linux 脚本                                               | 作用                                                                                               | 对应 Windows 版                            |
+| -------------------------------------------------------- | -------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| `scripts/build.sh [all\|backend\|frontend]`              | 一键构建后端可执行 jar 与前端 `dist/`                                                              | —                                          |
+| `scripts/start-all.sh`                                   | 一键启动后端 + 前端 + Nginx（`FRONTEND_MODE=auto\|dev\|prod`、`BUILD=1`、`NO_NGINX=1`）            | —                                          |
+| `scripts/start-backend.sh` / `scripts/start-frontend.sh` | 启动后端 / 前端                                                                                    | `start-backend.cmd` / `start-frontend.cmd` |
+| `scripts/start-nginx.sh`                                 | 启动 Nginx（`ENABLE_SITE=1` 可一并启用 `deploy/nginx-campus.conf` 站点，`RELOAD_ONLY=1` 仅热加载） | —                                          |
+| `scripts/stop-backend.sh` / `scripts/stop-frontend.sh`   | 停止后端（默认端口 8080）/ 前端（默认端口 5173）                                                   | —                                          |
+| `scripts/stop-nginx.sh`                                  | 停止 Nginx 并回收 80 端口（`CHECK_PORT=0` 跳过端口兜底）                                           | —                                          |
+| `scripts/init-local-db.sh` / `scripts/stop-local-db.sh`  | 初始化 / 停止仓库自带的 PostgreSQL 实例（端口 5433）                                               | `init-local-db.cmd` / `stop-local-db.cmd`  |
+| `scripts/check-env.sh`                                   | 环境自检（JDK / Node / npm / PostgreSQL / curl / python3）                                         | —                                          |
+| `scripts/smoke-test.sh`                                  | 接口冒烟测试（等价于 `smoke-test.ps1`，实现见 `smoke-test.py`）                                    | `smoke-test.ps1`                           |
 
 首次使用请先 `chmod +x backend/mvnw scripts/*.sh`；systemd 常驻与 Nginx 反向代理模板见 `deploy/`。
 完整的适配分析、依赖安装与部署步骤见 [`REPORT.md`](REPORT.md)。
@@ -161,14 +164,14 @@ D:/AAtmp
 
 ## 3. 功能实现与需求对照
 
-| 需求编号 | 功能域 | 实现位置 | 说明 |
-| --- | --- | --- | --- |
-| F1 | 校园地图与信息浏览 | `PostService#mapNodes/nearby/locationCluster`、`PostSpatialRepository`、`MapView.vue` | 视野内加载（bbox 查询）、分类筛选、同地点聚合、周边 X 公里检索、地图打点与弹窗 |
-| F2 | 信息搜索 | `SearchService`、`search/` 包、`SearchView.vue` | 普通关键词搜索（数据库 LIKE）+ AI 智能搜索（分词→意图解析→相关性排序→匹配原因→条件放宽） |
-| F3 | 信息发布 | `PostService#publish/update`、`AiPublishAdvisor`、`PublishView.vue` | 标题/正文/图片/地点/分类/有效期；AI 建议分类·标签·有效期，用户可修改；命中敏感词转待审核 |
-| F4 | 互动与协同验证 | `InteractionService`、`PostDetailView.vue` | 评论、点赞、证实/证伪（状态互斥 + 唯一约束 + 防刷冷却）、失物招领认领、联系方式脱敏 |
-| F5 | 信息治理 | `GovernanceService`、`PostLifecycleScheduler` | 举报（阈值自动转待审核）、内容审核、过期自动治理、任务记录与操作日志 |
-| F6 | 后台运营管理 | `AdminService`、`web/admin/*`、`views/admin/*` | 仪表盘、内容审核、举报管理、用户管理、地点核验、分类管理、任务记录、操作日志、数据分析 |
+| 需求编号 | 功能域             | 实现位置                                                                              | 说明                                                                                     |
+| -------- | ------------------ | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| F1       | 校园地图与信息浏览 | `PostService#mapNodes/nearby/locationCluster`、`PostSpatialRepository`、`MapView.vue` | 视野内加载（bbox 查询）、分类筛选、同地点聚合、周边 X 公里检索、地图打点与弹窗           |
+| F2       | 信息搜索           | `SearchService`、`search/` 包、`SearchView.vue`                                       | 普通关键词搜索（数据库 LIKE）+ AI 智能搜索（分词→意图解析→相关性排序→匹配原因→条件放宽） |
+| F3       | 信息发布           | `PostService#publish/update`、`AiPublishAdvisor`、`PublishView.vue`                   | 标题/正文/图片/地点/分类/有效期；AI 建议分类·标签·有效期，用户可修改；命中敏感词转待审核 |
+| F4       | 互动与协同验证     | `InteractionService`、`PostDetailView.vue`                                            | 评论、点赞、证实/证伪（状态互斥 + 唯一约束 + 防刷冷却）、失物招领认领、联系方式脱敏      |
+| F5       | 信息治理           | `GovernanceService`、`PostLifecycleScheduler`                                         | 举报（阈值自动转待审核）、内容审核、过期自动治理、任务记录与操作日志                     |
+| F6       | 后台运营管理       | `AdminService`、`web/admin/*`、`views/admin/*`                                        | 仪表盘、内容审核、举报管理、用户管理、地点核验、分类管理、任务记录、操作日志、数据分析   |
 
 页面清单 —— 用户端：首页、校园地图、信息搜索、发布信息、信息详情、登录、注册、个人中心；
 管理端（Element Plus）：仪表盘、内容审核、举报管理、用户管理、地点核验、分类管理、任务记录/操作日志、数据分析。
@@ -187,17 +190,17 @@ D:/AAtmp
 
 ### 4.2 事务处理（重点）
 
-| 场景 | 方法 | 事务与并发设计 |
-| --- | --- | --- |
-| 发布信息 | `PostService#publish` | `@Transactional(rollbackFor = Exception.class)`：有效期计算、敏感词判定、落库、写操作日志同一事务，任一步失败整体回滚 |
-| 编辑 / 下架 / 标记已解决 | `PostService#update/remove/resolve` | 事务内校验「作者或管理员」，状态与日志同时提交 |
-| 协同验证 | `InteractionService#verify` | ① `verification(post_id,user_id)` 唯一约束保证状态互斥；② 帖子 `@Version` 乐观锁避免计数丢失；③ 冲突时用 `TransactionTemplate` 重试整个事务（事务边界位于重试循环内） |
-| 评论 / 点赞 | `InteractionService#addComment/like` | 明细与帖子计数（评论数 / 点赞数）在同一事务更新 |
-| 失物招领认领 | `InteractionService#claim/handleClaim` | 认领记录与帖子「已解决」状态同一事务，避免「认领通过但信息仍在流转」 |
-| 举报 | `GovernanceService#report` | 举报明细、举报计数、阈值触发转待审核在同一事务 |
-| 举报处理 / 内容审核 | `GovernanceService#handleReport/audit` | 举报状态 + 帖子状态 + 操作日志同一事务 |
-| 过期治理定时任务 | `GovernanceService#startTask/expirePosts/finishTask` | 三段 `REQUIRES_NEW` 独立事务：即使批量处理失败，任务轨迹（RUNNING → FAILED）依然完整可查 |
-| 只读查询 | 各服务 `@Transactional(readOnly = true)` | 只读事务 + `EntityGraph` 预取，避免 N+1；`spring.jpa.open-in-view=false` |
+| 场景                     | 方法                                                 | 事务与并发设计                                                                                                                                                        |
+| ------------------------ | ---------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 发布信息                 | `PostService#publish`                                | `@Transactional(rollbackFor = Exception.class)`：有效期计算、敏感词判定、落库、写操作日志同一事务，任一步失败整体回滚                                                 |
+| 编辑 / 下架 / 标记已解决 | `PostService#update/remove/resolve`                  | 事务内校验「作者或管理员」，状态与日志同时提交                                                                                                                        |
+| 协同验证                 | `InteractionService#verify`                          | ① `verification(post_id,user_id)` 唯一约束保证状态互斥；② 帖子 `@Version` 乐观锁避免计数丢失；③ 冲突时用 `TransactionTemplate` 重试整个事务（事务边界位于重试循环内） |
+| 评论 / 点赞              | `InteractionService#addComment/like`                 | 明细与帖子计数（评论数 / 点赞数）在同一事务更新                                                                                                                       |
+| 失物招领认领             | `InteractionService#claim/handleClaim`               | 认领记录与帖子「已解决」状态同一事务，避免「认领通过但信息仍在流转」                                                                                                  |
+| 举报                     | `GovernanceService#report`                           | 举报明细、举报计数、阈值触发转待审核在同一事务                                                                                                                        |
+| 举报处理 / 内容审核      | `GovernanceService#handleReport/audit`               | 举报状态 + 帖子状态 + 操作日志同一事务                                                                                                                                |
+| 过期治理定时任务         | `GovernanceService#startTask/expirePosts/finishTask` | 三段 `REQUIRES_NEW` 独立事务：即使批量处理失败，任务轨迹（RUNNING → FAILED）依然完整可查                                                                              |
+| 只读查询                 | 各服务 `@Transactional(readOnly = true)`             | 只读事务 + `EntityGraph` 预取，避免 N+1；`spring.jpa.open-in-view=false`                                                                                              |
 
 ### 4.3 数据模型
 
@@ -244,16 +247,16 @@ termWeight：词典词 1.0 / bigram 0.8 / 单字 0.5                            
 
 ### 5.3 意图识别词典（节选）
 
-| 意图 | 关键词示例 |
-| --- | --- |
+| 意图     | 关键词示例                                             |
+| -------- | ------------------------------------------------------ |
 | 失物招领 | 失物、丢失、丢了、捡到、招领、认领、钱包、钥匙、校园卡 |
-| 二手交易 | 二手、出售、转让、求购、闲置、价格、多少钱、元 |
-| 组队交友 | 组队、招人、缺人、搭子、拼车、约球、一起 |
-| 校园活动 | 活动、讲座、比赛、报名、宣讲、招新、竞赛 |
-| 分享吐槽 | 吐槽、避雷、安利、评价、分享、体验、涨价 |
-| 时间 | 今天 / 昨天 / 最近 / 本周 / 周末 / 本月 → 近 N 天窗口 |
-| 距离 | 附近、周边、旁边 + 「3公里」等显式半径 |
-| 价格 | 「300元」「300块」→ 预算上限 |
+| 二手交易 | 二手、出售、转让、求购、闲置、价格、多少钱、元         |
+| 组队交友 | 组队、招人、缺人、搭子、拼车、约球、一起               |
+| 校园活动 | 活动、讲座、比赛、报名、宣讲、招新、竞赛               |
+| 分享吐槽 | 吐槽、避雷、安利、评价、分享、体验、涨价               |
+| 时间     | 今天 / 昨天 / 最近 / 本周 / 周末 / 本月 → 近 N 天窗口  |
+| 距离     | 附近、周边、旁边 + 「3公里」等显式半径                 |
+| 价格     | 「300元」「300块」→ 预算上限                           |
 
 ### 5.4 AI 辅助发布（`AiPublishAdvisor`）
 
@@ -290,17 +293,17 @@ termWeight：词典词 1.0 / bigram 0.8 / 单字 0.5                            
 
 ## 7. 验证情况（本机实测）
 
-| 验证项 | 命令 | 结果 |
-| --- | --- | --- |
-| 后端编译 | `backend> mvnw -B -DskipTests compile` | ✅ BUILD SUCCESS（87 个源文件） |
-| 单元 + 集成测试 | `backend> mvnw test` | ✅ 10 个用例全部通过（分词/意图/排序/放宽/敏感词/距离 + 全链路接口） |
-| PostgreSQL 迁移 | `spring-boot:run`（PostgreSQL 18，5433 实例） | ✅ Flyway 应用 V1 迁移，Hibernate validate 通过 |
-| 演示数据 | 启动日志 | ✅ 5 个校区（华农 2 正式 + 3 测试）、6 分类、90 地点、31 账号；1560 条模拟信息平均写入 3 个测试校区（520/520/520），正式校区为空 |
-| 存量库升级 | 在已有数据库上重启 | ✅ Flyway 仅新增应用 V2 迁移（校验和比对通过），Hibernate `validate` 通过，未重建数据 |
-| 全新库初始化 | 空库启动（8081 验证） | ✅ Flyway 应用 V1+V2 → 校区/地点/账号/模拟信息全部就绪；华农两校区信息数为 0 |
-| 接口冒烟 | `scripts/smoke-test.ps1` 全量脚本 | ✅ 36 项检查全部通过（结果见 `_build/smoke-result.txt`） |
-| 前端构建 | `frontend> npm run build` | ✅ built in ~16s（20+ 页面按路由分包） |
-| 前后端联调 | Vite dev server 5173 → 代理 8080 | ✅ `/api/schools` 正常返回中文数据 |
+| 验证项          | 命令                                          | 结果                                                                                                                            |
+| --------------- | --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| 后端编译        | `backend> mvnw -B -DskipTests compile`        | ✅ BUILD SUCCESS（87 个源文件）                                                                                                  |
+| 单元 + 集成测试 | `backend> mvnw test`                          | ✅ 10 个用例全部通过（分词/意图/排序/放宽/敏感词/距离 + 全链路接口）                                                             |
+| PostgreSQL 迁移 | `spring-boot:run`（PostgreSQL 18，5433 实例） | ✅ Flyway 应用 V1 迁移，Hibernate validate 通过                                                                                  |
+| 演示数据        | 启动日志                                      | ✅ 5 个校区（华农 2 正式 + 3 测试）、6 分类、90 地点、31 账号；1560 条模拟信息平均写入 3 个测试校区（520/520/520），正式校区为空 |
+| 存量库升级      | 在已有数据库上重启                            | ✅ Flyway 仅新增应用 V2 迁移（校验和比对通过），Hibernate `validate` 通过，未重建数据                                            |
+| 全新库初始化    | 空库启动（8081 验证）                         | ✅ Flyway 应用 V1+V2 → 校区/地点/账号/模拟信息全部就绪；华农两校区信息数为 0                                                     |
+| 接口冒烟        | `scripts/smoke-test.ps1` 全量脚本             | ✅ 36 项检查全部通过（结果见 `_build/smoke-result.txt`）                                                                         |
+| 前端构建        | `frontend> npm run build`                     | ✅ built in ~16s（20+ 页面按路由分包）                                                                                           |
+| 前后端联调      | Vite dev server 5173 → 代理 8080              | ✅ `/api/schools` 正常返回中文数据                                                                                               |
 
 冒烟测试覆盖：多租户切换、发布、地图视野、周边检索、AI 搜索意图与匹配原因、普通搜索、
 协同验证与防刷（重复提交被拒）、评论、点赞、举报、AI 辅助建议、后台仪表盘/分类与校区分布、
@@ -329,6 +332,7 @@ termWeight：词典词 1.0 / bigram 0.8 / 单字 0.5                            
 （本机实测：OSM 官方 8s 超时、Carto/GeoQ 超时；OSM 德国镜像、高德、ESRI 正常）。
 
 处理（已内置，无需改代码）：
+
 1. **默认已使用可用源**：「OSM 标准地图（德国镜像）」，坐标系与系统数据一致；
 2. 地图页右上角 **底图下拉框**可随时切换（含「高德地图（中文标注）」——国内网络最快，自动坐标纠偏）；
 3. 若当前底图不可达，瓦片连续加载失败 3 次后会自动探测并回退到可用源，也可点「检测底图」手动触发；
@@ -350,6 +354,7 @@ termWeight：词典词 1.0 / bigram 0.8 / 单字 0.5                            
 ```powershell
 Get-NetTCPConnection -LocalPort 8080 -State Listen | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force }
 ```
+
 或修改 `backend/src/main/resources/application.yml` 的 `server.port`、`frontend/vite.config.js` 的 `server.port`。
 
 ### 9.4 用 PowerShell 直接运行 `scripts/smoke-test.ps1` 出现中文乱码或语法错误
